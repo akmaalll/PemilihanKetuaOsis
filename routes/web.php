@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KetosController;
+use App\Http\Controllers\Admin\KriteriaController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\NilaiKetosController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SawMethodController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TodoController;
 use App\Http\Controllers\Admin\UserMenuController;
@@ -45,15 +49,41 @@ Route::domain('')->group(function () { // development
         # APPS 
 
 
-        // Route::group(['prefix' => '/todo'], function () {
-        //     Route::get('/', [TodoController::class, 'index'])->name('todo.index');
-        //     Route::get('/data', [TodoController::class, 'data'])->name('todo.data');
-        //     Route::get('/create', [TodoController::class, 'create'])->name('todo.create');
-        //     Route::post('/store', [TodoController::class, 'store'])->name('todo.store');
-        //     Route::get('/{id}/edit', [TodoController::class, 'edit'])->name('todo.edit');
-        //     Route::put('/{id}', [TodoController::class, 'update'])->name('todo.update');
-        //     Route::delete('/{id}', [TodoController::class, 'destroy'])->name('todo.delete');
-        // });
+        Route::group(['prefix' => '/calon-ketos'], function () {
+            Route::get('/', [KetosController::class, 'index'])->name('calon-ketos.index');
+            Route::get('/data', [KetosController::class, 'data'])->name('calon-ketos.data');
+            Route::get('/create', [KetosController::class, 'create'])->name('calon-ketos.create');
+            Route::post('/store', [KetosController::class, 'store'])->name('calon-ketos.store');
+            Route::get('/{id}/edit', [KetosController::class, 'edit'])->name('calon-ketos.edit');
+            Route::get('/{id}/obser', [NilaiKetosController::class, 'obser'])->name('calon-ketos.obser');
+            Route::put('/{id}', [KetosController::class, 'update'])->name('calon-ketos.update');
+            Route::delete('/{id}', [KetosController::class, 'destroy'])->name('calon-ketos.delete');
+        });
+
+        Route::group(['prefix' => '/nilai-ketos'], function () {
+            Route::get('/', [NilaiKetosController::class, 'index'])->name('nilai-ketos.index');
+            Route::get('/data', [NilaiKetosController::class, 'data'])->name('nilai-ketos.data');
+            Route::get('/{id}/create', [NilaiKetosController::class, 'create'])->name('nilai-ketos.create');
+            Route::post('/store', [NilaiKetosController::class, 'store'])->name('nilai-ketos.store');
+            Route::get('/{id}/edit', [NilaiKetosController::class, 'edit'])->name('nilai-ketos.edit');
+            Route::put('/{id}', [NilaiKetosController::class, 'update'])->name('nilai-ketos.update');
+            Route::delete('/{id}', [NilaiKetosController::class, 'destroy'])->name('nilai-ketos.delete');
+        });
+
+        Route::group(['prefix' => '/perhitungan-saw'], function () {
+            Route::get('/', [SawMethodController::class, 'index'])->name('perhitungan-saw.index');
+            Route::get('/data', [SawMethodController::class, 'data'])->name('perhitungan-saw.data');    
+        });
+
+        Route::group(['prefix' => '/kriteria'], function () {
+            Route::get('/', [KriteriaController::class, 'index'])->name('kriteria.index');
+            Route::get('/data', [KriteriaController::class, 'data'])->name('kriteria.data');
+            Route::get('/create', [KriteriaController::class, 'create'])->name('kriteria.create');
+            Route::post('/store', [KriteriaController::class, 'store'])->name('kriteria.store');
+            Route::get('/{id}/edit', [KriteriaController::class, 'edit'])->name('kriteria.edit');
+            Route::put('/{id}', [KriteriaController::class, 'update'])->name('kriteria.update');
+            Route::delete('/{id}', [KriteriaController::class, 'destroy'])->name('kriteria.delete');
+        });
 
 
         # MENU MASTER DATA 

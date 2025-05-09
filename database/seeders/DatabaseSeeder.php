@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Kriteria;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,5 +25,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(MenuSeeder::class);
         $this->call(UserMenuSeeder::class);
+        $this->call(KriteriaSeeder::class);
+        $this->call(CalonKetosSeeder::class);
+        $this->call(NilaiKetosSeeder::class);
     }
 }
