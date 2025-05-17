@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class KetosController extends Controller
 {
-    protected $title, $repo, $response;
+    protected $title, $repo, $response, $nilaiKetos;
 
     public function __construct(KetosContract $repo, NilaiKetosContract $nilaiKetos)
     {

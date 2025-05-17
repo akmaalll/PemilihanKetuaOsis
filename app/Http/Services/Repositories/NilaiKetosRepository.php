@@ -20,6 +20,7 @@ class NilaiKetosRepository extends BaseRepository implements NilaiKetosContract
 	public function __construct(NilaiKetos $model, Kriteria $kriteria,  Ketos $calonKetos)
 	{
 		$this->model = $model;
+		// dd($this->model);
 		$this->kriteria = $kriteria;
 		$this->calonKetos = $calonKetos;
 	}
@@ -31,6 +32,7 @@ class NilaiKetosRepository extends BaseRepository implements NilaiKetosContract
 		$sortOrder = $criteria['sort_order'] ?? 'desc';
 		return $this->model->orderBy($field, $sortOrder)->paginate($perPage);
 	}
+
 
 	public function scopePaginated($id = null)
 	{
@@ -53,6 +55,22 @@ class NilaiKetosRepository extends BaseRepository implements NilaiKetosContract
 				];
 			});
 	}
+
+	// public function scopePaginated($id = null, $perPage = 5)
+	// {
+	// 	$query = $this->model
+	// 		->with(['calonKetos', 'kriteria'])
+	// 		->whereHas('calonKetos', function ($q) use ($id) {
+	// 			if ($id) {
+	// 				$q->where('id', $id);
+	// 			}
+	// 		})
+	// 		->join('calon_ketos', 'calon_ketos.id', '=', 'nilai_ketos.id_ketos')
+	// 		->select('nilai_ketos.*')
+	// 		->orderBy('calon_ketos.nama');
+
+	// 	return $query->paginate($perPage);
+	// }
 
 	public function getCalonWithKriteria($id)
 	{

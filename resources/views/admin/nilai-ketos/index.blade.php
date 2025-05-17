@@ -50,6 +50,7 @@
                         </thead>
 
                         <tbody class="fw-semibold text-gray-600 datatables">
+                            
                         </tbody>
 
                     </table>

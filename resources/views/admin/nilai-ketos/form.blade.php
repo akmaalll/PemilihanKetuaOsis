@@ -45,7 +45,9 @@
                             <input name="_method" type="hidden" id="methodId"
                                 value="{{ isset($data->id) ? 'PUT' : 'POST' }}">
                             <input type="hidden" name="id" id="formId" value="{{ $data->id ?? null }}">
-                            <input type="hidden" name="id_ketos" id="formId" value="{{ $id ?? null }}">
+                            <input type="hidden" name="id_ketos" id="formId" value="{{ $ketos->id ?? null }}">
+                            {{-- {{ dd($data) }} --}}
+
                             @csrf
 
                             <!--begin::Input group-->
@@ -56,7 +58,7 @@
                                         data-placeholder="Select a Kriteria" name="id_kriteria" id="id_kriteria">
                                         <option value="">Select user...</option>
                                         @foreach (Helper::getData('kriterias') as $v)
-                                            <option {{ isset($data->id) && $data->id == $v->id ? 'selected' : '' }}
+                                            <option {{ isset($data->id) && $data->id_kriteria == $v->id ? 'selected' : '' }}
                                                 value="{{ $v->id }}">{{ $v->kriteria }}</option>
                                         @endforeach
                                     </select>
@@ -71,7 +73,7 @@
 
                             <!--begin::Actions-->
                             <div class="d-flex justify-content-end">
-                                <a href="{{ route($title . '.index') }}">
+                                <a href="{{ route('calon-ketos.obser', ['id' => $ketos->id]) }}">
                                     <button type="button" id="kt_modal_new_target_cancel" class="btn btn-secondary me-3"
                                         data-bs-dismiss="modal">Batal</button>
                                 </a>
@@ -193,7 +195,66 @@
     </script>
 
     @if (isset($data->id))
-        @include('admin._card._updateAjax')
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+                // proses update data
+                const submitButtonUpdate = document.getElementById('kt_modal_new_target_update');
+                submitButtonUpdate.addEventListener('click', function(e) {
+                    // Prevent default button action
+                    e.preventDefault();
+
+                    // Validate form before submit
+                    if (validator) {
+                        validator.validate().then(function(status) {
+                            if (status == 'Valid') {
+                                // Show loading indication
+                                submitButtonUpdate.setAttribute('data-kt-indicator', 'on');
+                                submitButtonUpdate.disabled = true;
+                                let formData = new FormData(kt_modal_new_target_form);
+                                let id = $('#formId').val();
+                                $.ajax({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                            'content')
+                                    },
+                                    data: formData,
+                                    url: '{{ url("admin/$title") }}/' + id,
+                                    type: "POST",
+                                    dataType: 'json',
+                                    processData: false,
+                                    contentType: false,
+                                    success: function(data) {
+                                        console.log('data');
+                                        if (data == 'konfirmasi password salah') {
+                                            toastr.error("Konfirmasi password salah!");
+                                            submitButtonUpdate.removeAttribute(
+                                                'data-kt-indicator');
+                                            submitButtonUpdate.disabled = false;
+                                        } else {
+                                            toastr.success("Successful update data!");
+                                            setTimeout(() => {
+                                                window.location.replace(
+                                                    "{{ url('admin/calon-ketos/' . $ketos->id . '/obser') }}"
+                                                );
+                                            }, 750);
+                                        }
+
+                                    },
+                                    error: function(data) {
+                                        submitButtonUpdate.removeAttribute(
+                                            'data-kt-indicator');
+                                        submitButtonUpdate.disabled = false;
+                                        toastr.error("Failed to update data!");
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+            });
+        </script>
     @else
         <script type="text/javascript">
             $(document).ready(function() {

@@ -48,6 +48,7 @@
                         <div class="d-flex">
                             <input id="input_search" type="text" class="form-control form-control-solid w-250px me-3"
                                 placeholder="Search">
+                            <input type="hidden" id="id" value="{{ $id }}">
 
                             <button id="button_search" class="btn btn-secondary me-3">
                                 <span class="btn-label">
@@ -93,7 +94,7 @@
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody class="fw-semibold text-gray-600">
                             {{-- {{ dd($data) }} --}}
                             @foreach ($data as $i => $v)
                                 <tr class="text-start text-gray-600 fs-7">
@@ -123,7 +124,44 @@
                                         </span>
                                     </td>
                                     <td class="text-end">
-                                        {!! Helper::btnAction($v['id'], $title) !!}
+                                        <a href="{{ route('nilai-ketos.edit', $v['id']) }}" class="">
+                                            <button type="button"
+                                                class="btn btn-icon btn-bg-secondary btn-active-color-primary btn-sm me-1">
+                                                <i class="ki-duotone ki-pencil fs-2">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </button>
+                                        </a>
+
+                                        <form class="delete-form" method="POST"
+                                            action="{{ url("admin/$title") }}/{{ $v['id'] }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="deleteData btn btn-icon btn-bg-secondary btn-active-color-primary btn-sm"
+                                                data-id="{{ $v['id'] }}">
+                                                <i class="ki-duotone ki-trash fs-2">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                    <span class="path3"></span>
+                                                </i>
+                                            </button>
+                                        </form>
+
+                                        {{-- <a href="javascript:void(0)" data-toggle="tooltip" data-id="{{ $v['id'] }}"
+                                            title="Delete" class="deleteData">
+                                            <button type="button"
+                                                class="btn btn-icon btn-bg-secondary btn-active-color-primary btn-sm">
+                                                <i class="ki-duotone ki-trash fs-2">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                    <span class="path3"></span>
+                                                    <span class="path4"></span>
+                                                    <span class="path5"></span>
+                                                </i>
+                                            </button>
+                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -163,7 +201,7 @@
 @push('jsScript')
     <script type="text/javascript">
         $(document).ready(function() {
-            loadpage(5, '');
+            loadpage(5, '', {{ $id }});
             var $pagination = $('.twbs-pagination');
             var defaultOpts = {
                 totalPages: 1,
@@ -174,13 +212,14 @@
             };
             $pagination.twbsPagination(defaultOpts);
 
-            function loaddata(page, per_page, search) {
+            function loaddata(page, per_page, search, id) {
                 $.ajax({
                     url: '{{ route($title . '.data') }}',
                     data: {
                         "page": page,
                         "per_page": per_page,
                         "search": search,
+                        "id": id
                     },
                     type: "GET",
                     datatype: "json",
@@ -190,12 +229,13 @@
                 });
             }
 
-            function loadpage(per_page, search) {
+            function loadpage(per_page, search, id) {
                 $.ajax({
                     url: '{{ route($title . '.data') }}',
                     data: {
                         "per_page": per_page,
                         "search": search,
+                        "id": id
                     },
                     type: "GET",
                     datatype: "json",
@@ -246,27 +286,42 @@
 
 
             // proses delete data
-            $('body').on('click', '.deleteData', function() {
-                var id = $(this).data("id");
+            $('body').on('submit', '.delete-form', function(e) {
+                e.preventDefault(); // Menghentikan submit form default
+
+                var form = $(this);
+                var id = form.find('.deleteData').data('id');
+                var row = form.closest('tr'); // Untuk menghapus baris tabel nanti
+
                 Swal.fire({
                     title: "Are you sure to Delete?",
-                    icon: "question",
+                    icon: "warning",
                     showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
                     confirmButtonText: "Yes, delete it!"
-                }).then(function(result) {
-                    if (result.value) {
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         $.ajax({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            url: form.attr('action'),
+                            type: 'POST', // Method spoofing Laravel
+                            data: {
+                                _method: 'DELETE',
+                                _token: $('meta[name="csrf-token"]').attr('content')
                             },
-                            type: "DELETE",
-                            url: '{{ url("admin/$title") }}/' + id,
-                            success: function(data) {
-                                loadpage(5, '');
-                                toastr.success("Successful delete data!");
+                            success: function(response) {
+                                toastr.success(response.message ||
+                                    "Data deleted successfully!");
+                                row.fadeOut(400, function() {
+                                    $(this).remove();
+                                });
+
+                                // Optional: Update counter atau data lain
+                                updateDataCount();
                             },
-                            error: function(data) {
-                                toastr.error("Failed delete data!");
+                            error: function(xhr) {
+                                toastr.error(xhr.responseJSON?.message ||
+                                    "Failed to delete data");
                             }
                         });
                     }

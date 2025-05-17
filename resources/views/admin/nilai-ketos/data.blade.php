@@ -7,30 +7,46 @@
         </td>
         <td>
             <span class="fw-semibold">
-                {{ $v->nama }}
+                {{ $v['nama'] }}
             </span>
         </td>
         <td>
             <span class="fw-semibold">
-                {{ $v->kelas }}
+                {{ $v['kriteria'] }}
             </span>
         </td>
         <td>
             <span class="fw-semibold">
-                {{ $v->jkl }}
+                {{ $v['ket'] }}
+            </span>
+        </td>
+        <td>
+            <span class="fw-semibold">
+                {{ $v['skor'] }}
             </span>
         </td>
         <td class="text-end">
-            <a href="{{ route('calon-ketos.obser', $v->id) }}" class="">
+            <a href="{{ route('nilai-ketos.edit', $v['id']) }}" class="">
                 <button type="button" class="btn btn-icon btn-bg-secondary btn-active-color-primary btn-sm me-1">
-                    <i class="ki-duotone ki-eye fs-2">
+                    <i class="ki-duotone ki-pencil fs-2">
                         <span class="path1"></span>
                         <span class="path2"></span>
-                        <span class="path3"></span>
                     </i>
                 </button>
             </a>
-            {!! Helper::btnAction($v->id, $title) !!}
+
+            <a href="javascript:void(0)" data-toggle="tooltip" data-id="{{ $v['id'] }}" title="Delete"
+                class="deleteData">
+                <button type="button" class="btn btn-icon btn-bg-secondary btn-active-color-primary btn-sm">
+                    <i class="ki-duotone ki-trash fs-2">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                        <span class="path3"></span>
+                        <span class="path4"></span>
+                        <span class="path5"></span>
+                    </i>
+                </button>
+            </a>
         </td>
     </tr>
 @endforeach
