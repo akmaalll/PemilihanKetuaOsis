@@ -18,8 +18,17 @@ class Helper
     public static function icon()
     {
         $data = [
-            'flaticon-squares-1', 'flaticon-technology', 'flaticon-squares', 'flaticon-menu-1', 'flaticon-menu-2', 'flaticon-settings-1', 'flaticon-folder-1', 'flaticon-folder-2', 'flaticon-folder-3',
-            'flaticon-users', 'flaticon-users-1',
+            'flaticon-squares-1',
+            'flaticon-technology',
+            'flaticon-squares',
+            'flaticon-menu-1',
+            'flaticon-menu-2',
+            'flaticon-settings-1',
+            'flaticon-folder-1',
+            'flaticon-folder-2',
+            'flaticon-folder-3',
+            'flaticon-users',
+            'flaticon-users-1',
         ];
         return $data;
     }
@@ -141,6 +150,12 @@ class Helper
     public static function getData($param)
     {
         $data = DB::table($param)->get();
+        return isset($data) ? $data : null;
+    }
+
+    public static function getDataRole($param)
+    {
+        $data = DB::table($param)->where('id', '!=', 1)->get();
         return isset($data) ? $data : null;
     }
 

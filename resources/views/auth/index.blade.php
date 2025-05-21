@@ -131,9 +131,14 @@
                             <!--end::Submit button-->
                         </form>
                         <!--end::Form-->
+                        <div class="text-gray-500 text-center fw-semibold fs-6">
+                            Belum Punya Akun?
+                            <a href="{{ url('/auth/register') }}" class="link-primary">Register disini</a>
+                        </div>
                     </div>
                     <!--end::Wrapper-->
                 </div>
+
                 <!--end::Card-->
             </div>
             <!--end::Body-->

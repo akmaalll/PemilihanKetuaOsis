@@ -29,6 +29,8 @@ use App\Http\Controllers\Auth\LoginController as Auths;
 // Route::resource('photos', PhotoController::class)->only(['index', 'show']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/auth/register', [App\Http\Controllers\HomeController::class, 'register']);
+Route::post('/auth/register', [App\Http\Controllers\HomeController::class, 'registerStore']);
 
 Route::domain('')->group(function () { // development
     // Route::domain('permohonan.bpfkmakassar.go.id')->group(function () { // production
@@ -36,6 +38,8 @@ Route::domain('')->group(function () { // development
     // Auth::routes();
     Route::get('/auth/login', [Auths::class, 'index'])->name('admin.login');
     Route::post('/auth/login', [Auths::class, 'login'])->name('login');
+
+
 
     Route::get('/logout', [Auths::class, 'logout'])->middleware('auth');
 
@@ -72,7 +76,7 @@ Route::domain('')->group(function () { // development
 
         Route::group(['prefix' => '/perhitungan-saw'], function () {
             Route::get('/', [SawMethodController::class, 'index'])->name('perhitungan-saw.index');
-            Route::get('/data', [SawMethodController::class, 'data'])->name('perhitungan-saw.data');    
+            Route::get('/data', [SawMethodController::class, 'data'])->name('perhitungan-saw.data');
         });
 
         Route::group(['prefix' => '/kriteria'], function () {
